@@ -6,36 +6,38 @@ public class Manager : MonoBehaviour {
     public Texture[] images;
     private int curImageNumber;
     public GameObject projectionSphere;
-    public float clickCooldownTimer;
-    public bool canClick;
+    public float switchCooldownTimer;
+    public bool canSwitch;
 
     void Awake() {
-        canClick = true;
+        canSwitch = true;
     }
 
     void Update() {
+        
         //Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved
-        if (canClick) {
+        if (canSwitch) {
             //Input.touchCount > 0
-            if (Input.touchCount > 0) {
+            canSwitch = false;
                 if (curImageNumber >= images.Length - 1) {
                     curImageNumber = 0;
                 } else {
                     curImageNumber++;
                 }
                 projectionSphere.GetComponent<Renderer>().material.mainTexture = images[curImageNumber];
-                canClick = false;
+                canSwitch = false;
                 StartCoroutine("Cooldown");
                 print("Cooldown started");
 
             }
-
-        }
     }
     IEnumerator Cooldown() {
+        canSwitch = false;
 
-        yield return new WaitForSeconds(clickCooldownTimer);
-        canClick = true;
+        yield return new WaitForSeconds(switchCooldownTimer);
+
+        print(switchCooldownTimer);
+        canSwitch = true;
         print("Cooldown stopped");
         StopCoroutine("Cooldown");
 
